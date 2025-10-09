@@ -1,203 +1,185 @@
-/* ======== Freedom Prayer Power - Styles ======== */
-
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Poppins:wght@400;600&display=swap');
-
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Body */
+/* -------------------
+   BASE STYLES
+------------------- */
 body {
-  font-family: 'Merriweather', serif;
-  background: #fafafa;
-  color: #222;
-  line-height: 1.7;
-  transition: background 0.4s ease, color 0.4s ease;
-}
-
-/* Landing Page */
-.landing-page {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f9fafc;
+  color: #2c3e50;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  text-align: center;
-  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-  color: white;
-  padding: 2rem;
+  min-height: 100vh;
 }
 
-.landing-page h1 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2rem;
+header {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  color: white;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+header h1 {
+  margin: 0;
+  font-family: 'Merriweather', serif;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* -------------------
+   TABLE OF CONTENTS
+------------------- */
+#toc {
+  width: 250px;
+  background-color: #ffffff;
+  border-right: 1px solid #e1e5ee;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+#toc h2 {
+  font-family: 'Merriweather', serif;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 
-.landing-page p {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+#chapter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-button {
-  background: #fff;
-  color: #6c5ce7;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  background: #dfe6e9;
-}
-
-/* Reader Layout */
-#reader {
-  display: none;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Header */
-header {
-  background: #6c5ce7;
-  color: white;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-header h2 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.2rem;
-}
-
-/* Controls */
-.controls {
-  display: flex;
-  gap: 0.6rem;
-}
-
-.controls button {
-  background: white;
-  color: #6c5ce7;
-  padding: 0.4rem 0.8rem;
+#chapter-list li {
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.4rem;
   border-radius: 8px;
-  font-size: 0.9rem;
-}
-
-/* Container */
-.container {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-/* Table of Contents */
-#chapters {
-  width: 250px;
-  background: #f4f4f4;
-  border-right: 1px solid #ddd;
-  overflow-y: auto;
-}
-
-.chapter {
-  padding: 1rem;
-  border-bottom: 1px solid #eee;
   cursor: pointer;
-  font-family: 'Poppins', sans-serif;
+  transition: background 0.3s;
 }
 
-.chapter:hover {
-  background: #eaeaea;
-}
-
-.chapter.active {
-  background: #dfe6e9;
+#chapter-list li:hover {
+  background-color: #f0f3ff;
+  color: #6c5ce7;
   font-weight: 600;
 }
 
-/* Content Area */
-.content {
+/* -------------------
+   MOBILE DROPDOWN
+------------------- */
+#mobile-toc {
+  display: none;
+  width: 100%;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e5ee;
+}
+
+#mobile-toc select {
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+/* -------------------
+   MAIN CONTENT AREA
+------------------- */
+#content {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
-  font-size: 1.05rem;
 }
 
-.content h1, .content h2 {
-  font-family: 'Poppins', sans-serif;
-  margin-bottom: 0.5rem;
+#chapter-content {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+#chapter-content h1, 
+#chapter-content h2, 
+#chapter-content h3 {
+  font-family: 'Merriweather', serif;
+  color: #2d3436;
+}
+
+#chapter-content h1 {
   color: #6c5ce7;
 }
 
-/* Progress Bar */
-.progress {
-  height: 6px;
-  background: #ddd;
-  width: 100%;
-  position: relative;
+#chapter-content blockquote {
+  background: #f0f3ff;
+  border-left: 4px solid #6c5ce7;
+  padding: 0.8rem 1rem;
+  font-style: italic;
+  margin: 1rem 0;
 }
 
-#progressBar {
-  height: 6px;
-  background: #6c5ce7;
-  width: 0%;
-  transition: width 0.3s ease;
-}
-
-/* Dark Mode */
-body.dark {
-  background: #1e1e1e;
-  color: #eee;
-}
-
-body.dark header {
-  background: #333;
-}
-
-body.dark #chapters {
-  background: #2b2b2b;
-  border-right: 1px solid #444;
-}
-
-body.dark .chapter {
-  border-bottom: 1px solid #444;
-}
-
-body.dark .chapter:hover {
-  background: #3c3c3c;
-}
-
-body.dark .chapter.active {
-  background: #555;
-}
-
-body.dark button {
-  background: #6c5ce7;
+#chapter-content button {
+  background-color: #6c5ce7;
   color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+  transition: background 0.3s;
 }
 
-/* Mobile Responsiveness */
+#chapter-content button:hover {
+  background-color: #574b90;
+}
+
+/* -------------------
+   FOOTER
+------------------- */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #f5f6fa;
+  font-size: 0.9rem;
+  border-top: 1px solid #e1e5ee;
+}
+
+/* -------------------
+   RESPONSIVE DESIGN
+------------------- */
 @media (max-width: 768px) {
-  #chapters {
-    display: none;
+  main {
+    flex-direction: column;
   }
-  .content {
+
+  #toc {
+    display: none; /* Hide sidebar */
+  }
+
+  #mobile-toc {
+    display: block; /* Show dropdown */
+  }
+
+  #content {
+    padding: 1rem;
+  }
+
+  #chapter-content {
     padding: 1.5rem;
-  }
-  header h2 {
-    font-size: 1rem;
+    border-radius: 8px;
   }
 }
