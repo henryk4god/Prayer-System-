@@ -4,11 +4,31 @@
     "file": "content/chapter1.md"
   },
   {
-    "title": "CHAPTER TWO: Faith and Focus",
+    "title": "CHAPTER TWO: The 5-Method Prayer System",
     "file": "content/chapter2.md"
   },
   {
-    "title": "CHAPTER THREE: The Final Step",
+    "title": "CHAPTER THREE: Implementation & Optimization — Building Your Prayer Lifestyle",
     "file": "content/chapter3.md"
+  },
+  {
+    "title": "CHAPTER FOUR: 50 Go-To Scriptures & Weekly Reflection Prompts",
+    "file": "content/chapter4.md"
+  },
+  {
+    "title": "CHAPTER FIVE: Gratitude & Intercession Prayer Guide",
+    "file": "content/chapter5.md"
+  },
+  {
+    "title": "CHAPTER SIX: Personal Growth & Family Prayer Strategy",
+    "file": "content/chapter6.md"
+  },
+  {
+    "title": "CHAPTER SEVEN: Workplace, Crisis & Celebration Prayer Strategies",
+    "file": "content/chapter7.md"
+  },
+  {
+    "title": "CHAPTER EIGHT: Your Prayer Life Reimagined",
+    "file": "content/conclusion.md"
   }
 ]
