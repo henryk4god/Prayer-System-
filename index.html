@@ -3,102 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Freedom Prayer System | by Henry Lucky</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- Stylesheet -->
+  <title>Freedom Prayer System</title>
   <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
+  <!-- ====== Landing Page ====== -->
+  <div class="landing-page" id="landing">
+    <img src="cover.jpg" alt="Freedom Prayer Power" class="cover-image" />
     <h1>Freedom Prayer System</h1>
-    <p class="subtitle">by Henry Lucky</p>
-  </header>
+    <p>by Henry Lucky</p>
+    <button id="startReading">Start Reading</button>
+  </div>
 
-  <main>
-    <!-- Sidebar for Desktop -->
-    <aside id="toc">
+  <!-- ====== Reader Section ====== -->
+  <div class="reader hidden" id="reader">
+    
+    <!-- Sidebar Table of Contents (Desktop) -->
+    <aside id="sidebar">
       <h2>Table of Contents</h2>
-      <ul id="chapter-list"></ul>
+      <div id="chapter-list"></div>
     </aside>
 
-    <!-- Dropdown for Mobile -->
-    <div id="mobile-toc">
-      <select id="mobile-chapter-select">
+    <!-- Mobile Dropdown TOC -->
+    <div id="mobile-toc" class="hidden">
+      <select id="chapterSelect">
         <option value="">Select Chapter...</option>
       </select>
     </div>
 
-    <!-- Main Reading Area -->
-    <section id="content">
-      <div id="chapter-content">
-        <p>Welcome to <strong>Freedom Prayer Power</strong>! Click “Start Reading” below to begin.</p>
-        <button id="start-btn">Start Reading</button>
+    <!-- Main Content -->
+    <main id="content">
+      <div class="toolbar">
+        <button id="toggleTheme">🌙 Dark Mode</button>
       </div>
-    </section>
-  </main>
+      <div id="chapter-content">
+        <h1>Welcome</h1>
+        <p>Start your journey by selecting a chapter.</p>
+      </div>
 
-  <footer>
-    <p>&copy; 2025 Freedom Prayer Power | Built with ❤️ by Henry Lucky</p>
-  </footer>
+      <div class="progress-container">
+        <div id="progressBar"></div>
+      </div>
+    </main>
+  </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    const tocList = document.getElementById("chapter-list");
-    const chapterContent = document.getElementById("chapter-content");
-    const mobileSelect = document.getElementById("mobile-chapter-select");
-    const startBtn = document.getElementById("start-btn");
-
-    // Load chapters.json
-    async function loadChapters() {
-      try {
-        const response = await fetch("content/chapters.json");
-        const chapters = await response.json();
-
-        // Populate both desktop and mobile TOC
-        chapters.forEach((chapter, index) => {
-          // Desktop sidebar
-          const li = document.createElement("li");
-          li.textContent = chapter.title;
-          li.addEventListener("click", () => loadChapter(chapter.file));
-          tocList.appendChild(li);
-
-          // Mobile dropdown
-          const option = document.createElement("option");
-          option.value = chapter.file;
-          option.textContent = chapter.title;
-          mobileSelect.appendChild(option);
-        });
-
-        // Mobile change event
-        mobileSelect.addEventListener("change", (e) => {
-          if (e.target.value) loadChapter(e.target.value);
-        });
-
-        // Start button opens first chapter
-        startBtn.addEventListener("click", () => loadChapter(chapters[0].file));
-      } catch (error) {
-        console.error("Error loading chapters.json:", error);
-        chapterContent.innerHTML = "<p style='color:red;'>Error loading chapters.</p>";
-      }
-    }
-
-    // Load specific chapter markdown
-    async function loadChapter(file) {
-      try {
-        const response = await fetch("content/" + file);
-        const text = await response.text();
-        chapterContent.innerHTML = marked.parse(text);
-      } catch (error) {
-        console.error("Error loading chapter:", error);
-        chapterContent.innerHTML = "<p style='color:red;'>Error loading chapter content.</p>";
-      }
-    }
-
-    loadChapters();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
