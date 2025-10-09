@@ -79,7 +79,7 @@ button:hover {
   background: var(--bg);
 }
 
-/* Sidebar */
+/* Sidebar (Desktop TOC) */
 #sidebar {
   width: 250px;
   background: var(--content-bg);
@@ -109,6 +109,26 @@ button:hover {
 .chapter.active {
   background: var(--accent);
   color: white;
+}
+
+/* ======== Mobile Dropdown TOC ======== */
+#mobile-toc {
+  display: none;
+  padding: 12px 20px;
+  background: var(--content-bg);
+  border-bottom: 2px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+#mobile-toc select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
 }
 
 /* Main Content */
@@ -181,9 +201,15 @@ button:hover {
   }
 
   #sidebar {
-    width: 100%;
-    height: auto;
-    border-bottom: 2px solid #ddd;
+    display: none; /* hide sidebar */
+  }
+
+  #mobile-toc {
+    display: block; /* show dropdown menu */
+  }
+
+  #content {
+    padding: 15px;
   }
 
   .toolbar {
