@@ -1,0 +1,134 @@
+<!-- 📘 Interactive eBook Reader (HTML + JSON/Markdown) --><!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prayer System</title>  <!-- Google Fonts -->  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">  <style>
+    :root {
+      --primary-color: #6c5ce7;
+      --accent-color: #a29bfe;
+      --bg-color: #f8f9ff;
+      --text-color: #2d3436;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: 280px;
+      background: var(--card-bg);
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    #sidebar h2 {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .chapter-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .chapter-list li {
+      margin: 10px 0;
+    }
+
+    .chapter-list a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      padding: 10px 12px;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    .chapter-list a:hover {
+      background: var(--accent-color);
+      color: #fff;
+    }
+
+    /* Reader Area */
+    #content {
+      flex-grow: 1;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    #chapter-title {
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    #chapter-body {
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #aaa;
+    }
+  </style></head>
+<body>
+  <aside id="sidebar">
+    <h2>📖 My eBook</h2>
+    <ul id="chapterList" class="chapter-list"></ul>
+  </aside>  <main id="content">
+    <h1 id="chapter-title">Welcome</h1>
+    <div id="chapter-body">Select a chapter to start reading.</div>
+  </main>  <!-- Markdown Parser -->  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>  <script>
+    const chapterListEl = document.getElementById('chapterList');
+    const chapterTitleEl = document.getElementById('chapter-title');
+    const chapterBodyEl = document.getElementById('chapter-body');
+
+    // Load chapters.json
+    async function loadChapters() {
+      try {
+        const res = await fetch('content/chapters.json');
+        const chapters = await res.json();
+
+        chapters.forEach((chapter, index) => {
+          const li = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = `#${chapter.file}`;
+          link.textContent = `${index + 1}. ${chapter.title}`;
+          link.addEventListener('click', () => loadChapter(chapter.title, chapter.file));
+          li.appendChild(link);
+          chapterListEl.appendChild(li);
+        });
+      } catch (err) {
+        chapterListEl.innerHTML = '<li>Error loading chapters.json</li>';
+      }
+    }
+
+    // Load specific markdown chapter
+    async function loadChapter(title, file) {
+      chapterTitleEl.textContent = title;
+      chapterBodyEl.innerHTML = '<div class="loading">Loading...</div>';
+      try {
+        const res = await fetch(`content/${file}`);
+        const text = await res.text();
+        chapterBodyEl.innerHTML = marked.parse(text);
+      } catch (err) {
+        chapterBodyEl.innerHTML = '<div class="loading">Error loading chapter</div>';
+      }
+    }
+
+    // Initialize
+    loadChapters();
+  </script></body>
+</html>
