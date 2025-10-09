@@ -3,136 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prayer Power eBook</title>
+  <title>Freedom Prayer System - eBook by Henry Lucky</title>
+
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background: #f7f9fb;
-      color: #333;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
 
-    /* Sidebar */
-    #sidebar {
-      width: 260px;
-      background: #fff;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
-      overflow-y: auto;
-      padding: 20px;
-    }
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
 
-    #sidebar h2 {
-      text-align: center;
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      color: #5c6bc0;
-    }
+  <!-- Manifest for PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#5c6bc0">
 
-    .chapter {
-      padding: 10px 15px;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .chapter:hover {
-      background: #e8eaf6;
-    }
-
-    .chapter.active {
-      background: #5c6bc0;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    /* Reader */
-    #content {
-      flex: 1;
-      padding: 30px;
-      overflow-y: auto;
-      background: #f9f9fb;
-      animation: fadeIn 0.5s ease;
-    }
-
-    #content h1, h2, h3 {
-      color: #3f51b5;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #c5cae9;
-      border-radius: 3px;
-    }
-  </style>
+  <!-- Markdown Parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
-  <div id="sidebar">
-    <h2>📖 Prayer Power</h2>
-    <div id="chapterList">Loading chapters...</div>
+  <!-- Landing Page -->
+  <div class="landing-page">
+    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f" 
+         alt="Freedom Prayer System Book Cover"
+         class="cover-image" />
+    <h1>Freedom Prayer System</h1>
+    <p>by <strong>Henry Lucky</strong></p>
+    <button id="startReading">Start Reading</button>
   </div>
 
-  <div id="content">
-    <h1>Welcome!</h1>
-    <p>Select a chapter to begin reading your eBook.</p>
+  <!-- Reader Interface -->
+  <div id="reader" class="reader hidden">
+    <div id="sidebar">
+      <h2>Table of Contents</h2>
+      <div id="chapters"></div>
+      <div class="progress-container">
+        <div id="progressBar"></div>
+      </div>
+    </div>
+
+    <div id="content">
+      <div class="toolbar">
+        <button id="themeToggle">🌓 Theme</button>
+        <button id="audioBtn">🔊 Read Aloud</button>
+      </div>
+      <div id="chapter-content">
+        <p>Select a chapter to begin reading...</p>
+      </div>
+    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    async function loadChapters() {
-      try {
-        const response = await fetch('content/chapters.json');
-        if (!response.ok) throw new Error('Failed to load chapters.json');
-        const chapters = await response.json();
-        const chapterList = document.getElementById('chapterList');
-        chapterList.innerHTML = '';
-
-        chapters.forEach((ch, index) => {
-          const div = document.createElement('div');
-          div.className = 'chapter';
-          div.textContent = ch.title;
-          div.onclick = () => loadChapter(ch.file, div);
-          chapterList.appendChild(div);
-          if (index === 0) div.click(); // Auto-load first chapter
-        });
-      } catch (err) {
-        console.error(err);
-        document.getElementById('chapterList').innerHTML = '<p style="color:red;">Error loading chapters.json</p>';
-      }
-    }
-
-    async function loadChapter(file, element) {
-      document.querySelectorAll('.chapter').forEach(el => el.classList.remove('active'));
-      element.classList.add('active');
-      const contentDiv = document.getElementById('content');
-      contentDiv.innerHTML = '<p><em>Loading chapter...</em></p>';
-
-      try {
-        const res = await fetch('content/' + file);
-        if (!res.ok) throw new Error('Failed to load chapter file');
-        const mdText = await res.text();
-        contentDiv.innerHTML = marked.parse(mdText);
-        contentDiv.scrollTop = 0;
-      } catch (err) {
-        console.error(err);
-        contentDiv.innerHTML = '<p style="color:red;">Error loading chapter content.</p>';
-      }
-    }
-
-    loadChapters();
-  </script>
+  <!-- JS -->
+  <script src="app.js"></script>
 </body>
 </html>
