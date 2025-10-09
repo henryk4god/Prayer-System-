@@ -1,0 +1,203 @@
+/* ======== Freedom Prayer System - Styles ======== */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Poppins:wght@400;600&display=swap');
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  font-family: 'Merriweather', serif;
+  background: #fafafa;
+  color: #222;
+  line-height: 1.7;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* Landing Page */
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  color: white;
+  padding: 2rem;
+}
+
+.landing-page h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.landing-page p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+button {
+  background: #fff;
+  color: #6c5ce7;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #dfe6e9;
+}
+
+/* Reader Layout */
+#reader {
+  display: none;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  background: #6c5ce7;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.controls button {
+  background: white;
+  color: #6c5ce7;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+/* Container */
+.container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Table of Contents */
+#chapters {
+  width: 250px;
+  background: #f4f4f4;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.chapter {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.chapter:hover {
+  background: #eaeaea;
+}
+
+.chapter.active {
+  background: #dfe6e9;
+  font-weight: 600;
+}
+
+/* Content Area */
+.content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  font-size: 1.05rem;
+}
+
+.content h1, .content h2 {
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 0.5rem;
+  color: #6c5ce7;
+}
+
+/* Progress Bar */
+.progress {
+  height: 6px;
+  background: #ddd;
+  width: 100%;
+  position: relative;
+}
+
+#progressBar {
+  height: 6px;
+  background: #6c5ce7;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* Dark Mode */
+body.dark {
+  background: #1e1e1e;
+  color: #eee;
+}
+
+body.dark header {
+  background: #333;
+}
+
+body.dark #chapters {
+  background: #2b2b2b;
+  border-right: 1px solid #444;
+}
+
+body.dark .chapter {
+  border-bottom: 1px solid #444;
+}
+
+body.dark .chapter:hover {
+  background: #3c3c3c;
+}
+
+body.dark .chapter.active {
+  background: #555;
+}
+
+body.dark button {
+  background: #6c5ce7;
+  color: white;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  #chapters {
+    display: none;
+  }
+  .content {
+    padding: 1.5rem;
+  }
+  header h2 {
+    font-size: 1rem;
+  }
+}
