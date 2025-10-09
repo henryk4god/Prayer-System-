@@ -3,51 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Freedom Prayer System</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Freedom Prayer Power - eBook by Henry Lucky</title>
+
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Manifest for PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#5c6bc0">
+
+  <!-- Markdown Parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-  <!-- ====== Landing Page ====== -->
-  <div class="landing-page" id="landing">
-    <img src="cover.jpg" alt="Freedom Prayer Power" class="cover-image" />
-    <h1>Freedom Prayer System</h1>
-    <p>by Henry Lucky</p>
+
+  <!-- Landing Page -->
+  <div class="landing-page">
+    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f" 
+         alt="Freedom Prayer Power Book Cover"
+         class="cover-image" />
+    <h1>Freedom Prayer Power</h1>
+    <p>by <strong>Henry Lucky</strong></p>
     <button id="startReading">Start Reading</button>
   </div>
 
-  <!-- ====== Reader Section ====== -->
-  <div class="reader hidden" id="reader">
-    
-    <!-- Sidebar Table of Contents (Desktop) -->
-    <aside id="sidebar">
+  <!-- Reader Interface -->
+  <div id="reader" class="reader hidden">
+    <div id="sidebar">
       <h2>Table of Contents</h2>
-      <div id="chapter-list"></div>
-    </aside>
-
-    <!-- Mobile Dropdown TOC -->
-    <div id="mobile-toc" class="hidden">
-      <select id="chapterSelect">
-        <option value="">Select Chapter...</option>
-      </select>
-    </div>
-
-    <!-- Main Content -->
-    <main id="content">
-      <div class="toolbar">
-        <button id="toggleTheme">🌙 Dark Mode</button>
-      </div>
-      <div id="chapter-content">
-        <h1>Welcome</h1>
-        <p>Start your journey by selecting a chapter.</p>
-      </div>
-
+      <div id="chapters"></div>
       <div class="progress-container">
         <div id="progressBar"></div>
       </div>
-    </main>
+    </div>
+
+    <div id="content">
+      <div class="toolbar">
+        <button id="themeToggle">🌓 Theme</button>
+        <button id="audioBtn">🔊 Read Aloud</button>
+      </div>
+      <div id="chapter-content">
+        <p>Select a chapter to begin reading...</p>
+      </div>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- JS -->
+  <script src="app.js"></script>
 </body>
 </html>
