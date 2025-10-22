@@ -149,5 +149,3 @@ Here's what you've accomplished in this chapter:
 **NEXT: The Power of the Word**
 
 In Chapter Four, you'll receive 50 go-to Scriptures for every season of life—plus reflection prompts to deepen your prayer connection each week.
-
-[← Previous Chapter](./chapter2.md) | [Next Chapter →](./chapter4.md)
