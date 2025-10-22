@@ -151,5 +151,3 @@ Now you know how to:
 **NEXT: Personal & Family Prayer Strategy**
 
 In Chapter Six, you'll learn how to develop intentional Personal Growth Prayer Plans, and design a step-by-step Family Prayer Routine that works even with busy schedules.
-
-[← Previous Chapter](./chapter4.md) | [Next Chapter →](./chapter6.md)
