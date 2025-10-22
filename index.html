@@ -1,62 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Freedom Prayer Power - eBook by Henry Lucky</title>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Manifest for PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#5c6bc0">
-
-  <!-- Markdown Parser -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakthrough Prayer - eBook Reader</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="description" content="Breakthrough Prayer - A Practical System for Hearing God, Building Consistency, and Seeing Results">
 </head>
 <body>
-
-  <!-- Landing Page -->
-  <div class="landing-page">
-    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f"
-         alt="Freedom Prayer Power Book Cover"
-         class="cover-image" />
-    <h1>Freedom Prayer Power</h1>
-    <p>by <strong>Henry Lucky</strong></p>
-    <button id="startReading">Start Reading</button>
-  </div>
-
-  <!-- Reader Interface -->
-  <div id="reader" class="reader hidden">
-    <!-- Mobile Toggle Button -->
-    <button id="toggleSidebar" class="mobile-toggle">☰ Chapters</button>
-
-    <!-- Sidebar -->
-    <div id="sidebar">
-      <h2>Table of Contents</h2>
-      <div id="chapters"></div>
-      <div class="progress-container">
-        <div id="progressBar"></div>
-      </div>
+    <!-- Loading Screen -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading eBook...</p>
     </div>
 
-    <!-- Main Content -->
-    <div id="content">
-      <div class="toolbar">
-        <button id="themeToggle">🌓 Theme</button>
-        <button id="audioBtn">🔊 Read Aloud</button>
-      </div>
-      <div id="chapter-content">
-        <p>Select a chapter to begin reading...</p>
-      </div>
+    <!-- Landing Page -->
+    <div id="landing" class="landing-page">
+        <div class="landing-content">
+            <div class="book-cover">
+                <div class="cover-placeholder">
+                    <h1>Breakthrough Prayer</h1>
+                    <p>The Prayer Blueprint</p>
+                </div>
+            </div>
+            <div class="book-meta">
+                <h1>Breakthrough Prayer</h1>
+                <h2>A Practical System for Hearing God, Building Consistency, and Seeing Results</h2>
+                <p class="author">By Henry, Creator of The Prayer System Pro</p>
+                <p class="description">Transform your prayer life from scattered to strategic with this practical, system-based approach to consistent, powerful prayer.</p>
+                <button id="startReading" class="btn-primary">Start Reading</button>
+                <div class="meta-stats">
+                    <div class="stat">
+                        <span class="number">7</span>
+                        <span class="label">Chapters</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">34</span>
+                        <span class="label">Pages</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">5</span>
+                        <span class="label">Methods</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- JS -->
-  <script src="app.js"></script>
+    <!-- Reader Interface -->
+    <div id="reader" class="reader hidden">
+        <!-- Header -->
+        <header class="reader-header">
+            <button id="sidebarToggle" class="btn-icon" aria-label="Toggle sidebar">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="header-title">
+                <h1 id="chapterTitle">Breakthrough Prayer</h1>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+            <div class="header-controls">
+                <button id="themeToggle" class="btn-icon" aria-label="Toggle theme">🌙</button>
+                <button id="audioToggle" class="btn-icon" aria-label="Toggle audio">🔊</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="reader-main">
+            <div class="content-container">
+                <article id="content" class="content">
+                    <!-- Dynamic content loaded here -->
+                </article>
+                
+                <!-- Navigation Controls -->
+                <div class="navigation">
+                    <button id="prevChapter" class="btn-secondary" disabled>Previous</button>
+                    <button id="nextChapter" class="btn-primary">Next Chapter</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>Table of Contents</h3>
+                <button id="closeSidebar" class="btn-icon" aria-label="Close sidebar">×</button>
+            </div>
+            <nav id="toc" class="toc">
+                <!-- Dynamic TOC loaded here -->
+            </nav>
+            <div class="sidebar-footer">
+                <div class="reading-progress">
+                    <span>Reading Progress</span>
+                    <div class="progress-circle">
+                        <svg width="60" height="60">
+                            <circle cx="30" cy="30" r="25" class="progress-bg"></circle>
+                            <circle cx="30" cy="30" r="25" class="progress-ring" id="progressRing"></circle>
+                        </svg>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Audio Controls -->
+        <div id="audioControls" class="audio-controls hidden">
+            <div class="audio-header">
+                <h4>Text-to-Speech</h4>
+                <button id="closeAudio" class="btn-icon">×</button>
+            </div>
+            <div class="audio-body">
+                <div class="audio-info">
+                    <span id="audioStatus">Ready to play</span>
+                </div>
+                <div class="audio-buttons">
+                    <button id="playPause" class="btn-secondary">Play</button>
+                    <button id="stopAudio" class="btn-secondary">Stop</button>
+                </div>
+                <div class="audio-settings">
+                    <label for="voiceSelect">Voice:</label>
+                    <select id="voiceSelect"></select>
+                    <label for="rateSelect">Speed:</label>
+                    <select id="rateSelect">
+                        <option value="0.5">0.5x</option>
+                        <option value="0.75">0.75x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Overlay -->
+        <div id="overlay" class="overlay hidden"></div>
+    </div>
+
+    <!-- Notes Modal -->
+    <div id="notesModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Chapter Reflection & Notes</h3>
+                <button id="closeNotes" class="btn-icon">×</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="notesText" placeholder="Write your reflections, insights, or notes for this chapter..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="saveNotes" class="btn-primary">Save Notes</button>
+                <button id="clearNotes" class="btn-secondary">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
