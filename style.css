@@ -658,3 +658,30 @@ body {
 .mb-2 {
     margin-bottom: 2rem;
 }
+
+/* Telegram Mini-App Specific Styles */
+.telegram-app .reader-header {
+    padding-top: calc(1rem + env(safe-area-inset-top));
+}
+
+.telegram-app .reader-main {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Ensure proper viewport on mobile */
+body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Better touch targets for mobile */
+.btn-primary, .btn-secondary, .btn-icon {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.toc-item {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
