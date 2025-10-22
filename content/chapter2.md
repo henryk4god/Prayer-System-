@@ -221,4 +221,3 @@ Write down which ones felt most natural and effective for you. This will help yo
 
 In Chapter Three, you'll learn how to build your daily and weekly prayer schedule, troubleshoot obstacles, and optimize your environment for long-term consistency.
 
-[← Previous Chapter](./chapter1.md) | [Next Chapter →](./chapter3.md)
