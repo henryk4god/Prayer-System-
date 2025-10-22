@@ -157,5 +157,3 @@ You now have:
 **NEXT: Gratitude & Intercession**
 
 In Chapter Five, we'll focus on the Prayer of Thanksgiving, and introduce strategic **Intercession Lists** for those you love and lead.
-
-[← Previous Chapter](./chapter3.md) | [Next Chapter →](./chapter5.md)
