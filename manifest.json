@@ -1,23 +1,24 @@
 {
-  "name": "Freedom Prayer System",
-  "short_name": "PrayerPower",
-  "description": "An inspiring eBook by Henry Lucky — Read, reflect, and grow in prayer.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "name": "Breakthrough Prayer - eBook Reader",
+  "short_name": "Breakthrough Prayer",
+  "description": "A Practical System for Hearing God, Building Consistency, and Seeing Results",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#f5f5f5",
-  "theme_color": "#6c5ce7",
+  "background_color": "#ffffff",
+  "theme_color": "#2c3e50",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMzNDk4REIiLz4KPHBhdGggZD0iTTk2IDQ4QzcxLjIgNDggNTEuMiA2OCA1MS4yIDkyLjggNTEuMiAxMTcuNiA3MS4yIDEzNy42IDk2IDEzNy42IDEyMC44IDEzNy42IDE0MC44IDExNy42IDE0MC44IDkyLjggMTQwLjggNjggMTIwLjggNDggOTYgNDhaTTEwOC44IDE1Ni44QzEwOC44IDE2Mi40IDEwNC40IDE2Ni44IDk4LjggMTY2LjggOTMuMiAxNjYuOCA4OC44IDE2Mi40IDg4LjggMTU2LjggODguOCAxNTEuMiA5My4yIDE0Ni44IDk4LjggMTQ2LjggMTA0LjQgMTQ2LjggMTA4LjggMTUxLjIgMTA4LjggMTU2LjhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/svg+xml"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMzNDk4REIiLz4KPHBhdGggZD0iTTI1NiAxMjhDMTkwLjQgMTI4IDEzOS4yIDE3OS4yIDEzOS4yIDI0NC44IDEzOS4yIDMxMC40IDE5MC40IDM2MS42IDI1NiAzNjEuNiAzMjEuNiAzNjEuNiAzNzIuOCAzMTAuNCAzNzIuOCAyNDQuOCAzNzIuOCAxNzkuMiAzMjEuNiAxMjggMjU2IDEyOFpNMjg1LjYgNDE0LjhDMjg1LjYgNDI1LjYgMjc2LjggNDM0LjQgMjY2IDQzNC40IDI1NS4yIDQzNC40IDI0Ni40IDQyNS42IDI0Ni40IDQxNC44IDI0Ni40IDQwNCAyNTUuMiAzOTUuMiAyNjYgMzk1LjIgMjc2LjggMzk1LjIgMjg1LjYgNDA0IDI4NS42IDQxNC44WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml"
     }
-  ]
+  ],
+  "categories": ["books", "education", "productivity"],
+  "lang": "en-US"
 }
