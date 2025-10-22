@@ -7,6 +7,7 @@ class EBookReader {
         this.synth = window.speechSynthesis;
         this.utterance = null;
         this.isPlaying = false;
+        this.chapters = [];
         
         this.initializeApp();
     }
@@ -18,18 +19,21 @@ class EBookReader {
         // Initialize theme
         this.applyTheme(this.theme);
         
-        // Load table of contents and chapters
-        await this.loadTableOfContents();
-        await this.loadChapters();
+        try {
+            // Load chapters list first
+            await this.loadChaptersList();
+            // Then load the current chapter
+            await this.loadChapter(this.currentChapter);
+        } catch (error) {
+            console.error('Error initializing app:', error);
+            this.hideLoading();
+        }
         
         // Set up event listeners
         this.setupEventListeners();
         
         // Hide loading screen
         this.hideLoading();
-        
-        // Update progress
-        this.updateProgress();
     }
 
     showLoading() {
@@ -45,72 +49,46 @@ class EBookReader {
         document.body.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
         
-        // Update theme toggle button
         const themeToggle = document.getElementById('themeToggle');
         themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
     }
 
-    async loadTableOfContents() {
+    async loadChaptersList() {
         try {
-            const response = await fetch('./content/toc.md');
-            if (!response.ok) throw new Error('TOC not found');
+            // First try to load from chapters.json
+            const response = await fetch('./chapters.json');
+            if (!response.ok) throw new Error('chapters.json not found');
             
-            const tocContent = await response.text();
-            const tocItems = this.parseTOC(tocContent);
+            this.chapters = await response.json();
+            this.totalChapters = this.chapters.length;
             
-            const tocContainer = document.getElementById('toc');
-            tocContainer.innerHTML = '';
-
-            tocItems.forEach((item, index) => {
-                const tocItem = document.createElement('div');
-                tocItem.className = 'toc-item';
-                tocItem.textContent = item.title;
-                tocItem.addEventListener('click', () => {
-                    this.loadChapter(index + 1);
-                    this.toggleSidebar();
-                });
-                tocContainer.appendChild(tocItem);
-            });
         } catch (error) {
-            console.error('Error loading table of contents:', error);
-            this.fallbackTOC();
+            console.error('Error loading chapters.json:', error);
+            // Fallback to hardcoded chapters
+            this.chapters = [
+                { title: "Why Traditional Prayer Methods Fail—and What to Do About It", file: "./content/chapter1.md" },
+                { title: "The 5-Method Prayer System", file: "./content/chapter2.md" },
+                { title: "Implementation & Optimization — Building Your Prayer Lifestyle", file: "./content/chapter3.md" },
+                { title: "50 Go-To Scriptures & Weekly Reflection Prompts", file: "./content/chapter4.md" },
+                { title: "Gratitude & Intercession Prayer Guide", file: "./content/chapter5.md" },
+                { title: "Personal Growth & Family Prayer Strategy", file: "./content/chapter6.md" },
+                { title: "Workplace, Crisis & Celebration Prayer Strategies", file: "./content/chapter7.md" },
+                { title: "CONCLUSION: Your Prayer Life Reimagined", file: "./content/chapter8.md" }
+            ];
         }
+        
+        // Populate table of contents
+        this.populateTOC();
     }
 
-    parseTOC(tocContent) {
-        const lines = tocContent.split('\n').filter(line => line.trim());
-        const tocItems = [];
-        
-        lines.forEach(line => {
-            // Remove markdown numbering and parse titles
-            const title = line.replace(/^\d+\.\s*/, '').trim();
-            if (title && !title.startsWith('#')) {
-                tocItems.push({ title });
-            }
-        });
-        
-        return tocItems;
-    }
-
-    fallbackTOC() {
-        const fallbackTOC = [
-            { title: "Why Traditional Prayer Methods Fail—and What to Do About It" },
-            { title: "The 5-Method Prayer System" },
-            { title: "Implementation & Optimization — Building Your Prayer Lifestyle" },
-            { title: "50 Go-To Scriptures & Weekly Reflection Prompts" },
-            { title: "Gratitude & Intercession Prayer Guide" },
-            { title: "Personal Growth & Family Prayer Strategy" },
-            { title: "Workplace, Crisis & Celebration Prayer Strategies" },
-            { title: "CONCLUSION: Your Prayer Life Reimagined" }
-        ];
-
+    populateTOC() {
         const tocContainer = document.getElementById('toc');
         tocContainer.innerHTML = '';
 
-        fallbackTOC.forEach((item, index) => {
+        this.chapters.forEach((chapter, index) => {
             const tocItem = document.createElement('div');
             tocItem.className = 'toc-item';
-            tocItem.textContent = `Chapter ${index + 1}: ${item.title}`;
+            tocItem.textContent = `Chapter ${index + 1}: ${chapter.title}`;
             tocItem.addEventListener('click', () => {
                 this.loadChapter(index + 1);
                 this.toggleSidebar();
@@ -119,28 +97,19 @@ class EBookReader {
         });
     }
 
-    async loadChapters() {
-        // Save reading position
-        const savedChapter = localStorage.getItem('currentChapter');
-        if (savedChapter) {
-            this.currentChapter = parseInt(savedChapter);
-        }
-        
-        // Preload first chapter
-        await this.loadChapter(this.currentChapter);
-    }
-
     async loadChapter(chapterNumber) {
         if (chapterNumber < 1) chapterNumber = 1;
-        if (chapterNumber > this.totalChapters) chapterNumber = this.totalChapters;
+        if (chapterNumber > this.chapters.length) chapterNumber = this.chapters.length;
         
         this.currentChapter = chapterNumber;
         localStorage.setItem('currentChapter', chapterNumber);
         
+        const chapter = this.chapters[chapterNumber - 1];
+        if (!chapter) return;
+        
         try {
-            // Try to load from markdown file
-            const response = await fetch(`./content/chapter${chapterNumber}.md`);
-            if (!response.ok) throw new Error('Chapter not found');
+            const response = await fetch(chapter.file);
+            if (!response.ok) throw new Error('Chapter file not found');
             
             const markdownContent = await response.text();
             const htmlContent = marked.parse(markdownContent);
@@ -148,15 +117,17 @@ class EBookReader {
             
         } catch (error) {
             console.error(`Error loading chapter ${chapterNumber}:`, error);
-            // Fallback to embedded content
-            await this.loadFallbackChapter(chapterNumber);
+            document.getElementById('content').innerHTML = `
+                <h1>Chapter ${chapterNumber}: ${chapter.title}</h1>
+                <p>Error loading content. Please check if the file exists: <strong>${chapter.file}</strong></p>
+            `;
         }
         
         document.getElementById('chapterTitle').textContent = `Chapter ${chapterNumber}`;
         
         // Update navigation buttons
         document.getElementById('prevChapter').disabled = chapterNumber === 1;
-        document.getElementById('nextChapter').disabled = chapterNumber === this.totalChapters;
+        document.getElementById('nextChapter').disabled = chapterNumber === this.chapters.length;
         
         // Update TOC active state
         this.updateTocActiveState();
@@ -166,23 +137,6 @@ class EBookReader {
         
         // Load notes for this chapter
         this.loadNotes();
-    }
-
-    async loadFallbackChapter(chapterNumber) {
-        // Fallback content if markdown files aren't available
-        const fallbackChapters = {
-            1: `# CHAPTER ONE: Why Traditional Prayer Methods Fail—and What to Do About It\n\n**Content loading failed. Please check if chapter1.md exists in the content folder.**`,
-            2: `# CHAPTER TWO: The 5-Method Prayer System\n\n**Content loading failed. Please check if chapter2.md exists in the content folder.**`,
-            3: `# CHAPTER THREE: Implementation & Optimization\n\n**Content loading failed. Please check if chapter3.md exists in the content folder.**`,
-            4: `# CHAPTER FOUR: 50 Go-To Scriptures\n\n**Content loading failed. Please check if chapter4.md exists in the content folder.**`,
-            5: `# CHAPTER FIVE: Gratitude & Intercession\n\n**Content loading failed. Please check if chapter5.md exists in the content folder.**`,
-            6: `# CHAPTER SIX: Personal Growth & Family Prayer\n\n**Content loading failed. Please check if chapter6.md exists in the content folder.**`,
-            7: `# CHAPTER SEVEN: Workplace, Crisis & Celebration\n\n**Content loading failed. Please check if chapter7.md exists in the content folder.**`,
-            8: `# CHAPTER EIGHT: CONCLUSION, Your Prayer Life Reimagined\n\n**Content loading failed. Please check if chapter8.md exists in the content folder.**`
-        };
-        
-        const htmlContent = marked.parse(fallbackChapters[chapterNumber] || 'Chapter content not available.');
-        document.getElementById('content').innerHTML = htmlContent;
     }
 
     updateTocActiveState() {
@@ -197,11 +151,10 @@ class EBookReader {
     }
 
     updateProgress() {
-        const progress = ((this.currentChapter - 1) / (this.totalChapters - 1)) * 100;
+        const progress = ((this.currentChapter - 1) / (this.chapters.length - 1)) * 100;
         document.getElementById('progressFill').style.width = `${progress}%`;
         document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
         
-        // Update circular progress
         const circle = document.getElementById('progressRing');
         const radius = 25;
         const circumference = 2 * Math.PI * radius;
@@ -278,11 +231,13 @@ class EBookReader {
         sidebar.classList.toggle('open');
         overlay.classList.toggle('hidden');
         
-        // Close overlay when clicked
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            overlay.classList.add('hidden');
-        });
+        // Auto-close sidebar on mobile when clicking overlay
+        if (window.innerWidth <= 768) {
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.add('hidden');
+            });
+        }
     }
 
     toggleAudioControls() {
@@ -293,11 +248,6 @@ class EBookReader {
     setupAudio() {
         const playPauseBtn = document.getElementById('playPause');
         const stopBtn = document.getElementById('stopAudio');
-        const voiceSelect = document.getElementById('voiceSelect');
-        const rateSelect = document.getElementById('rateSelect');
-
-        // Load available voices
-        this.loadVoices();
 
         playPauseBtn.addEventListener('click', () => {
             if (this.isPlaying) {
@@ -314,22 +264,12 @@ class EBookReader {
             playPauseBtn.textContent = 'Play';
         });
 
-        // Refresh voices when they become available
-        speechSynthesis.addEventListener('voiceschanged', () => {
-            this.loadVoices();
-        });
-    }
-
-    loadVoices() {
-        const voices = speechSynthesis.getVoices();
-        const voiceSelect = document.getElementById('voiceSelect');
-        voiceSelect.innerHTML = '';
-
-        voices.forEach(voice => {
-            const option = document.createElement('option');
-            option.value = voice.name;
-            option.textContent = `${voice.name} (${voice.lang})`;
-            voiceSelect.appendChild(option);
+        // Simple audio - remove voice selection for Telegram compatibility
+        document.getElementById('audioToggle').addEventListener('click', () => {
+            const content = document.getElementById('content').textContent;
+            const speech = new SpeechSynthesisUtterance(content);
+            speech.lang = "en-US";
+            window.speechSynthesis.speak(speech);
         });
     }
 
@@ -340,18 +280,8 @@ class EBookReader {
         }
 
         const content = document.getElementById('content').textContent;
-        const selectedVoice = document.getElementById('voiceSelect').value;
-        const rate = parseFloat(document.getElementById('rateSelect').value);
-
         this.utterance = new SpeechSynthesisUtterance(content);
-        
-        const voices = speechSynthesis.getVoices();
-        const voice = voices.find(v => v.name === selectedVoice);
-        if (voice) {
-            this.utterance.voice = voice;
-        }
-        
-        this.utterance.rate = rate;
+        this.utterance.lang = "en-US";
         this.utterance.onend = () => {
             this.isPlaying = false;
             document.getElementById('playPause').textContent = 'Play';
@@ -445,10 +375,8 @@ class EBookReader {
 
         if (Math.abs(diff) > swipeThreshold) {
             if (diff > 0) {
-                // Swipe left - next chapter
                 this.loadChapter(this.currentChapter + 1);
             } else {
-                // Swipe right - previous chapter
                 this.loadChapter(this.currentChapter - 1);
             }
         }
@@ -469,6 +397,3 @@ class EBookReader {
 document.addEventListener('DOMContentLoaded', () => {
     new EBookReader();
 });
-
-// Service Worker REMOVED for testing
-console.log('Service worker disabled for testing');
