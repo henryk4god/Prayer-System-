@@ -177,8 +177,7 @@ class EBookReader {
             5: `# CHAPTER FIVE: Gratitude & Intercession\n\n[Content would be loaded from chapter5.md]`,
             6: `# CHAPTER SIX: Personal Growth & Family Prayer\n\n[Content would be loaded from chapter6.md]`,
             7: `# CHAPTER SEVEN: Workplace, Crisis & Celebration\n\n[Content would be loaded from chapter7.md]`,
-            8: `# CHAPTER EIGHT: CONCLUSION, Your Prayer Life Reimagined\n\n[would be loaded from chapter8.md]`
-        };
+            8: `# CHAPTER EIGHT: CONCLUSION, Your Prayer Life Reimagined\n\n[Content would be loaded from chapter8.md]`
         };
         
         const htmlContent = marked.parse(fallbackChapters[chapterNumber] || 'Chapter content not available.');
