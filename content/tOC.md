@@ -7,3 +7,4 @@
 5. Gratitude & Intercession Prayer Guide
 6. Personal Growth & Family Prayer Strategy
 7. Workplace, Crisis & Celebration Prayer Strategies
+8. CONCLUSION: Your Prayer Life Reimagined
