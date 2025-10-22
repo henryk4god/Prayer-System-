@@ -141,5 +141,3 @@ You now have tools to:
 **NEXT: CONCLUSION — Your Prayer Life Reimagined**
 
 In this final chapter, we'll bring it all together with encouragement, review, and a vision for your long-term prayer journey.
-
-[← Previous Chapter](./chapter6.md) | [Next Chapter →](./conclusion.md)
