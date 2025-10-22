@@ -7,7 +7,6 @@ class EBookReader {
         this.synth = window.speechSynthesis;
         this.utterance = null;
         this.isPlaying = false;
-        this.isTelegram = window.TelegramWebViewProxy !== undefined;
         
         this.initializeApp();
     }
@@ -19,8 +18,9 @@ class EBookReader {
         // Initialize theme
         this.applyTheme(this.theme);
         
-        // Load content
-        await this.loadAllContent();
+        // Load table of contents and chapters
+        await this.loadTableOfContents();
+        await this.loadChapters();
         
         // Set up event listeners
         this.setupEventListeners();
@@ -45,41 +45,89 @@ class EBookReader {
         document.body.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
         
+        // Update theme toggle button
         const themeToggle = document.getElementById('themeToggle');
         themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
     }
 
-    async loadAllContent() {
-        // For Telegram mini-app, use embedded content to avoid fetch issues
-        await this.loadTableOfContents();
-        await this.loadChapter(this.currentChapter);
+    async loadTableOfContents() {
+        try {
+            const response = await fetch('./content/toc.md');
+            if (!response.ok) throw new Error('TOC not found');
+            
+            const tocContent = await response.text();
+            const tocItems = this.parseTOC(tocContent);
+            
+            const tocContainer = document.getElementById('toc');
+            tocContainer.innerHTML = '';
+
+            tocItems.forEach((item, index) => {
+                const tocItem = document.createElement('div');
+                tocItem.className = 'toc-item';
+                tocItem.textContent = item.title;
+                tocItem.addEventListener('click', () => {
+                    this.loadChapter(index + 1);
+                    this.toggleSidebar();
+                });
+                tocContainer.appendChild(tocItem);
+            });
+        } catch (error) {
+            console.error('Error loading table of contents:', error);
+            this.fallbackTOC();
+        }
     }
 
-    async loadTableOfContents() {
+    parseTOC(tocContent) {
+        const lines = tocContent.split('\n').filter(line => line.trim());
+        const tocItems = [];
+        
+        lines.forEach(line => {
+            // Remove markdown numbering and parse titles
+            const title = line.replace(/^\d+\.\s*/, '').trim();
+            if (title && !title.startsWith('#')) {
+                tocItems.push({ title });
+            }
+        });
+        
+        return tocItems;
+    }
+
+    fallbackTOC() {
+        const fallbackTOC = [
+            { title: "Why Traditional Prayer Methods Fail—and What to Do About It" },
+            { title: "The 5-Method Prayer System" },
+            { title: "Implementation & Optimization — Building Your Prayer Lifestyle" },
+            { title: "50 Go-To Scriptures & Weekly Reflection Prompts" },
+            { title: "Gratitude & Intercession Prayer Guide" },
+            { title: "Personal Growth & Family Prayer Strategy" },
+            { title: "Workplace, Crisis & Celebration Prayer Strategies" },
+            { title: "CONCLUSION: Your Prayer Life Reimagined" }
+        ];
+
         const tocContainer = document.getElementById('toc');
         tocContainer.innerHTML = '';
 
-        const tocItems = [
-            "Why Traditional Prayer Methods Fail—and What to Do About It",
-            "The 5-Method Prayer System",
-            "Implementation & Optimization — Building Your Prayer Lifestyle",
-            "50 Go-To Scriptures & Weekly Reflection Prompts",
-            "Gratitude & Intercession Prayer Guide",
-            "Personal Growth & Family Prayer Strategy",
-            "Workplace, Crisis & Celebration Prayer Strategies",
-            "CONCLUSION: Your Prayer Life Reimagined"
-        ];
-
-        tocItems.forEach((title, index) => {
+        fallbackTOC.forEach((item, index) => {
             const tocItem = document.createElement('div');
             tocItem.className = 'toc-item';
-            tocItem.textContent = `Chapter ${index + 1}: ${title}`;
+            tocItem.textContent = `Chapter ${index + 1}: ${item.title}`;
             tocItem.addEventListener('click', () => {
                 this.loadChapter(index + 1);
                 this.toggleSidebar();
             });
             tocContainer.appendChild(tocItem);
         });
+    }
+
+    async loadChapters() {
+        // Save reading position
+        const savedChapter = localStorage.getItem('currentChapter');
+        if (savedChapter) {
+            this.currentChapter = parseInt(savedChapter);
+        }
+        
+        // Preload first chapter
+        await this.loadChapter(this.currentChapter);
     }
 
     async loadChapter(chapterNumber) {
@@ -89,10 +137,20 @@ class EBookReader {
         this.currentChapter = chapterNumber;
         localStorage.setItem('currentChapter', chapterNumber);
         
-        // Use embedded content for Telegram compatibility
-        const content = this.getChapterContent(chapterNumber);
-        const htmlContent = marked.parse(content);
-        document.getElementById('content').innerHTML = htmlContent;
+        try {
+            // Try to load from markdown file
+            const response = await fetch(`./content/chapter${chapterNumber}.md`);
+            if (!response.ok) throw new Error('Chapter not found');
+            
+            const markdownContent = await response.text();
+            const htmlContent = marked.parse(markdownContent);
+            document.getElementById('content').innerHTML = htmlContent;
+            
+        } catch (error) {
+            console.error(`Error loading chapter ${chapterNumber}:`, error);
+            // Fallback to embedded content
+            await this.loadFallbackChapter(chapterNumber);
+        }
         
         document.getElementById('chapterTitle').textContent = `Chapter ${chapterNumber}`;
         
@@ -110,27 +168,21 @@ class EBookReader {
         this.loadNotes();
     }
 
-    getChapterContent(chapterNumber) {
-        // Embedded content to avoid fetch issues in Telegram
-        const chapters = {
-            1: `# CHAPTER ONE: Why Traditional Prayer Methods Fail—and What to Do About It\n\n**INTRODUCTION**\n\nLet's begin with an uncomfortable truth: 96% of Christians struggle with prayer consistency. If you're one of them, you're not alone—and you're not a bad Christian. You've just never been taught how to build a system that works.\n\n[Full chapter content embedded here...]`,
-            
-            2: `# CHAPTER TWO: The 5-Method Prayer System\n\n**INTRODUCTION**\n\nNow that you've laid a strong foundation, it's time to build on it. In this chapter, you'll discover a complete, flexible framework made up of five powerful prayer methods.\n\n[Full chapter content embedded here...]`,
-            
-            3: `# CHAPTER THREE: Implementation & Optimization\n\n**INTRODUCTION**\n\nYou've built the foundation. You've explored the 5-method system. Now it's time to bring it all together and turn it into a habit—a lifestyle, not a one-off event.\n\n[Full chapter content embedded here...]`,
-            
-            4: `# CHAPTER FOUR: 50 Go-To Scriptures\n\n**INTRODUCTION**\n\nSometimes, you don't know what to pray for. Other times, your emotions cloud your focus. That's where Scripture-based prayer becomes your anchor.\n\n[Full chapter content embedded here...]`,
-            
-            5: `# CHAPTER FIVE: Gratitude & Intercession\n\n**INTRODUCTION**\n\nTwo of the most overlooked yet powerful forms of prayer are gratitude prayers and intercessory prayers.\n\n[Full chapter content embedded here...]`,
-            
-            6: `# CHAPTER SIX: Personal Growth & Family Prayer\n\n**INTRODUCTION**\n\nPrayer is not just about problems—it's about becoming. In this chapter, we focus on how to develop intentional prayer habits.\n\n[Full chapter content embedded here...]`,
-            
-            7: `# CHAPTER SEVEN: Workplace, Crisis & Celebration\n\n**INTRODUCTION**\n\nPrayer is not limited to morning devotionals or Sunday services. As a modern Christian, you need to pray in every area of life.\n\n[Full chapter content embedded here...]`,
-            
-            8: `# CHAPTER EIGHT: CONCLUSION - Your Prayer Life Reimagined\n\n**YOU STARTED WITH A STRUGGLE…**\n\nIf you picked up this guide, chances are you once felt scattered in prayer, guilty for inconsistency, unsure what to say, frustrated by silence, and afraid God wasn't listening.\n\nYou're not alone. Over 90% of believers struggle with prayer consistency—and even seasoned Christians go through dry seasons. But what matters is this:\n\nYou showed up. You committed. You built a system.\n\nAnd now?\n\nYou don't just "pray" randomly anymore.\nYou've built a structured, Spirit-led, sustainable prayer lifestyle.\n\n## WHAT YOU'VE ACCOMPLISHED\n\nOver these chapters, you've learned how to:\n\n1. Build a daily and weekly prayer rhythm\n2. Use 5 powerful prayer methods\n3. Track prayers and celebrate answered ones\n4. Pray through Scripture, family needs, crisis, and career\n5. Create a prayer culture in your home\n6. Let your prayer life flow into your real life\n\n_This is no longer about discipline. It's about relationships._\n\n## FINAL CHARGE\n\nWhen you pray consistently, with clarity and conviction:\n- You create spiritual momentum\n- You build an atmosphere of peace and power\n- You unlock answers, direction, healing, and strength\n- You become a light in every environment\n\n**Thank you for committing to this journey.**\n\nThis is not the end.\nThis is the beginning of a powerful, intimate, daily walk with God.\n\n_Your prayer life just became your superpower._`
+    async loadFallbackChapter(chapterNumber) {
+        // Fallback content if markdown files aren't available
+        const fallbackChapters = {
+            1: `# CHAPTER ONE: Why Traditional Prayer Methods Fail—and What to Do About It\n\n**Content loading failed. Please check if chapter1.md exists in the content folder.**`,
+            2: `# CHAPTER TWO: The 5-Method Prayer System\n\n**Content loading failed. Please check if chapter2.md exists in the content folder.**`,
+            3: `# CHAPTER THREE: Implementation & Optimization\n\n**Content loading failed. Please check if chapter3.md exists in the content folder.**`,
+            4: `# CHAPTER FOUR: 50 Go-To Scriptures\n\n**Content loading failed. Please check if chapter4.md exists in the content folder.**`,
+            5: `# CHAPTER FIVE: Gratitude & Intercession\n\n**Content loading failed. Please check if chapter5.md exists in the content folder.**`,
+            6: `# CHAPTER SIX: Personal Growth & Family Prayer\n\n**Content loading failed. Please check if chapter6.md exists in the content folder.**`,
+            7: `# CHAPTER SEVEN: Workplace, Crisis & Celebration\n\n**Content loading failed. Please check if chapter7.md exists in the content folder.**`,
+            8: `# CHAPTER EIGHT: CONCLUSION, Your Prayer Life Reimagined\n\n**Content loading failed. Please check if chapter8.md exists in the content folder.**`
         };
         
-        return chapters[chapterNumber] || 'Chapter content not available.';
+        const htmlContent = marked.parse(fallbackChapters[chapterNumber] || 'Chapter content not available.');
+        document.getElementById('content').innerHTML = htmlContent;
     }
 
     updateTocActiveState() {
@@ -149,6 +201,7 @@ class EBookReader {
         document.getElementById('progressFill').style.width = `${progress}%`;
         document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
         
+        // Update circular progress
         const circle = document.getElementById('progressRing');
         const radius = 25;
         const circumference = 2 * Math.PI * radius;
@@ -188,11 +241,8 @@ class EBookReader {
             this.toggleSidebar();
         });
 
-        // Audio controls - disable for Telegram if not working
+        // Audio controls
         document.getElementById('audioToggle').addEventListener('click', () => {
-            if (this.isTelegram) {
-                alert('Audio features may be limited in Telegram. Please use a regular browser for full functionality.');
-            }
             this.toggleAudioControls();
         });
 
@@ -219,17 +269,6 @@ class EBookReader {
 
         // Touch gestures for mobile
         this.setupTouchGestures();
-        
-        // Telegram specific setup
-        if (this.isTelegram) {
-            this.setupTelegram();
-        }
-    }
-
-    setupTelegram() {
-        console.log('Running in Telegram mini-app');
-        // Add Telegram-specific adjustments here
-        document.body.classList.add('telegram-app');
     }
 
     toggleSidebar() {
@@ -239,6 +278,7 @@ class EBookReader {
         sidebar.classList.toggle('open');
         overlay.classList.toggle('hidden');
         
+        // Close overlay when clicked
         overlay.addEventListener('click', () => {
             sidebar.classList.remove('open');
             overlay.classList.add('hidden');
@@ -256,6 +296,7 @@ class EBookReader {
         const voiceSelect = document.getElementById('voiceSelect');
         const rateSelect = document.getElementById('rateSelect');
 
+        // Load available voices
         this.loadVoices();
 
         playPauseBtn.addEventListener('click', () => {
@@ -273,6 +314,7 @@ class EBookReader {
             playPauseBtn.textContent = 'Play';
         });
 
+        // Refresh voices when they become available
         speechSynthesis.addEventListener('voiceschanged', () => {
             this.loadVoices();
         });
@@ -343,6 +385,7 @@ class EBookReader {
             document.querySelector('.navigation')
         );
 
+        // Notes modal events
         document.getElementById('closeNotes').addEventListener('click', () => {
             this.closeNotesModal();
         });
@@ -402,8 +445,10 @@ class EBookReader {
 
         if (Math.abs(diff) > swipeThreshold) {
             if (diff > 0) {
+                // Swipe left - next chapter
                 this.loadChapter(this.currentChapter + 1);
             } else {
+                // Swipe right - previous chapter
                 this.loadChapter(this.currentChapter - 1);
             }
         }
@@ -425,15 +470,5 @@ document.addEventListener('DOMContentLoaded', () => {
     new EBookReader();
 });
 
-// Service Worker - only register in regular browsers
-if ('serviceWorker' in navigator && !window.TelegramWebViewProxy) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
+// Service Worker REMOVED for testing
+console.log('Service worker disabled for testing');
