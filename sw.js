@@ -13,6 +13,7 @@ const urlsToCache = [
   '/content/chapter5.md',
   '/content/chapter6.md',
   '/content/chapter7.md',
+  '/content/chapter8.md',
   'https://cdn.jsdelivr.net/npm/marked/marked.min.js'
 ];
 
