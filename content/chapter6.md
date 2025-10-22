@@ -152,5 +152,3 @@ What you now have:
 **NEXT: Workplace, Crisis & Celebration Strategies**
 
 In Chapter Seven, we'll explore how to pray with boldness in the workplace, in times of crisis, and in seasons of celebration—because prayer is not just for problems.
-
-[← Previous Chapter](./chapter5.md) | [Next Chapter →](./chapter7.md)
